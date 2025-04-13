@@ -44,7 +44,7 @@ func (g *QuotationGateway) GetQuotation() (Quotation, error) {
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, g.URL, nil)
 	if err != nil {
-		log.Printf("Error creating request: %v", err)
+		log.Printf("Erro ao criar requisição: %v", err)
 		return Quotation{}, err
 	}
 
@@ -53,9 +53,9 @@ func (g *QuotationGateway) GetQuotation() (Quotation, error) {
 	resp, err := c.Do(req)
 	if err != nil {
 		if errors.Is(err, context.DeadlineExceeded) {
-			log.Printf("Timeout exceeded when calling external API: %v", err)
+			log.Printf("Tempo excedido ao chamar API externa: %v", err)
 		} else {
-			log.Printf("Error calling external API: %v", err)
+			log.Printf("Erro ao chamar API externa: %v", err)
 		}
 		return Quotation{}, err
 	}
@@ -63,21 +63,21 @@ func (g *QuotationGateway) GetQuotation() (Quotation, error) {
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		log.Printf("Error reading response body: %v", err)
+		log.Printf("Erro ao ler corpo da resposta: %v", err)
 		return Quotation{}, err
 	}
 
 	var rawQuotation map[string]map[string]interface{}
 	err = json.Unmarshal(body, &rawQuotation)
 	if err != nil {
-		log.Printf("Error unmarshaling JSON: %v", err)
+		log.Printf("Erro ao desserializar JSON: %v", err)
 		return Quotation{}, err
 	}
 
 	usdbrl := rawQuotation["USDBRL"]
 	createDate, err := time.Parse("2006-01-02 15:04:05", usdbrl["create_date"].(string))
 	if err != nil {
-		log.Printf("Error parsing create_date: %v", err)
+		log.Printf("Erro ao analisar create_date: %v", err)
 		return Quotation{}, err
 	}
 

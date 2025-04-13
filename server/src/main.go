@@ -14,12 +14,11 @@ import (
 )
 
 func main() {
-	// Parse command-line flags
+	// Analisa os flags da linha de comando
 	port := flag.String("port", "8080", "HTTP server port")
 	dbPath := flag.String("db", "./quotations.db", "Path to SQLite database file")
 	flag.Parse()
 
-	// Connect to database
 	db, err := sql.Open("sqlite3", *dbPath)
 	if err != nil {
 		log.Fatalf("Failed to connect to SQLite database: %v", err)
@@ -31,17 +30,15 @@ func main() {
 		log.Fatalf("Failed to create database table: %v", err)
 	}
 
-	// Create dependencies
 	quotationsRepository := repositories.NewQuotationsRepository(db)
 	quotationGateway := gateways.NewQuotationGateway()
 	quotationHandler := handlers.NewQuotationHandler(quotationGateway, quotationsRepository)
 
-	// Set up HTTP server
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /cotacao", quotationHandler.HandleGetQuotation)
 
-	// Start the server
 	serverAddr := fmt.Sprintf(":%s", *port)
+
 	log.Printf("Starting server on %s", serverAddr)
 	log.Fatal(http.ListenAndServe(serverAddr, mux))
 }

@@ -10,7 +10,7 @@ import (
 	"github.com/CaiqueRibeiro/client-api-ex/server/src/gateways"
 )
 
-// Interfaces for dependencies
+// Interfaces para dependências
 type QuotationGateway interface {
 	GetQuotation() (gateways.Quotation, error)
 }
@@ -35,7 +35,7 @@ func NewQuotationHandler(gateway QuotationGateway, repository QuotationRepositor
 func (h *QuotationHandler) HandleGetQuotation(w http.ResponseWriter, r *http.Request) {
 	quotation, err := h.gateway.GetQuotation()
 	if err != nil {
-		log.Printf("Error getting quotation from API: %v", err)
+		log.Printf("Erro ao obter cotação da API: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -46,9 +46,9 @@ func (h *QuotationHandler) HandleGetQuotation(w http.ResponseWriter, r *http.Req
 	err = h.repository.CreateWithContext(ctx, quotation)
 	if err != nil {
 		if errors.Is(err, context.DeadlineExceeded) {
-			log.Printf("Timeout exceeded when persisting quotation to database: %v", err)
+			log.Printf("Tempo excedido ao persistir cotação no banco de dados: %v", err)
 		} else {
-			log.Printf("Error persisting quotation to database: %v", err)
+			log.Printf("Erro ao persistir cotação no banco de dados: %v", err)
 		}
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

@@ -18,6 +18,7 @@ func NewQuotationsRepository(db *sql.DB) *QuotationsRepository {
 }
 
 func (r *QuotationsRepository) Create(quotation gateways.Quotation) error {
+	// Usa o método com contexto de background para compatibilidade retroativa
 	return r.CreateWithContext(context.Background(), quotation)
 }
 
@@ -58,7 +59,7 @@ func (r *QuotationsRepository) CreateWithContext(ctx context.Context, quotation 
 		quotation.CreateDate,
 	)
 	if err != nil {
-		return fmt.Errorf("failed to insert quotation: %w", err)
+		return fmt.Errorf("falha ao inserir cotação: %w", err)
 	}
 
 	return nil

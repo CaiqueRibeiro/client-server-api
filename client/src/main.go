@@ -9,12 +9,12 @@ import (
 )
 
 func main() {
-	// Parse command-line flags
+	// Analisa os flags da linha de comando
 	serverURL := flag.String("server", "http://localhost:8080/cotacao", "URL of the quotation server")
 	outputPath := flag.String("output", "cotacao.txt", "Path to save the quotation")
 	flag.Parse()
 
-	// Create custom usecase with the provided server URL and output path
+	// Cria um caso de uso personalizado com a URL do servidor e caminho de saída fornecidos
 	getQuotationUseCase := &usecases.GetQuotationUseCase{
 		ServerURL:  *serverURL,
 		OutputPath: *outputPath,
@@ -27,7 +27,7 @@ func main() {
 
 	fmt.Printf("USD-BRL quotation: %s\n", quotation.Bid)
 
-	// Save the quotation to the specified file
+	// Salva a cotação no arquivo especificado
 	err = getQuotationUseCase.SaveQuotationToFile(quotation)
 	if err != nil {
 		log.Fatalf("Failed to save quotation to file: %v", err)
